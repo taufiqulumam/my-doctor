@@ -1,4 +1,4 @@
-import IconBackDark from './arrow_back_24px_outlined.svg';
+import IconBackDark from './ic-back-dark.svg';
 import IconAddPhoto from './btn_add_photo.svg';
 import IconRemovePhoto from './btn_remove_photo.svg';
 import IconDoctorActive from './ic-doctor-active.svg';
@@ -8,6 +8,10 @@ import IconMessages from './ic-messages.svg';
 import IconHospitalsActive from './ic-hospitals-active.svg';
 import IconHospitals from './ic-hospitals.svg';
 import IconStar from './ic-star.svg';
+import IconNext from './ic-next.svg';
+import IconBackLight from './ic-back-light.svg';
+import IconSendLight from './ic-send-light.svg';
+import IconSendDark from './ic-send-dark.svg';
 
 export {
   IconBackDark,
@@ -20,4 +24,8 @@ export {
   IconHospitals,
   IconHospitalsActive,
   IconStar,
+  IconNext,
+  IconBackLight,
+  IconSendLight,
+  IconSendDark,
 };
