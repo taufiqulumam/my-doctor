@@ -1,45 +1,73 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {DummyDoctor1, DummyDoctor2, DummyDoctor3} from '../../assets';
-import {List} from '../../components';
-import {colors, fonts} from '../../utils';
+import React, {useState, useEffect} from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Header, List} from '../../components';
+import {colors, fonts, getData} from '../../utils';
+import {Fire} from '../../config';
 
 const Messages = ({navigation}) => {
-  const [messages] = useState([
-    {
-      id: 1,
-      profile: DummyDoctor1,
-      name: 'Alexander jannie',
-      desc: 'Baik dok, terima kasih atas wakt...',
-    },
-    {
-      id: 2,
-      profile: DummyDoctor2,
-      name: 'Nairobi Putri Hayza',
-      desc: 'Oh tentu saja tidak, karen jeruk it...',
-    },
-    {
-      id: 3,
-      profile: DummyDoctor3,
-      name: 'John Steve',
-      desc: 'Oke menurut pak dokter bagaimana unt...',
-    },
-  ]);
+  const [user, setUser] = useState({});
+  const [historyChat, setHistoryChat] = useState([]);
+
+  useEffect(() => {
+    getDataUserFromLocal();
+
+    const rootDB = Fire.database().ref();
+    const urlHistory = `messages/${user.uid}/`;
+    const messagesDB = rootDB.child(urlHistory);
+
+    messagesDB.on('value', async (snapshot) => {
+      if (snapshot.val()) {
+        const oldData = snapshot.val();
+        const data = [];
+
+        const promises = await Object.keys(oldData).map(async (key) => {
+          const urlUidDoctor = `doctors/${oldData[key].uidPartner}`;
+          const detailDoctor = await rootDB.child(urlUidDoctor).once('value');
+          console.log('detail doctors: ', detailDoctor.val());
+          data.push({
+            id: key,
+            detailDoctor: detailDoctor.val(),
+            ...oldData[key],
+          });
+        });
+
+        await Promise.all(promises);
+        console.log('data history: ', data);
+        setHistoryChat(data);
+      }
+    });
+  }, [user.uid]);
+
+  const getDataUserFromLocal = () => {
+    getData('user').then((res) => {
+      setUser(res);
+    });
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.content}>
-        <Text style={styles.title}>Messages</Text>
-        {messages.map((message) => {
-          return (
-            <List
-              key={message.id}
-              profile={message.profile}
-              name={message.name}
-              desc={message.desc}
-              onPress={() => navigation.navigate('Chatting')}
-            />
-          );
-        })}
+        <Header
+          title="Messages"
+          onPress={() => navigation.navigate('Doctor')}
+        />
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {historyChat.map((chat) => {
+            const dataDoctor = {
+              id: chat.detailDoctor.uid,
+              data: chat.detailDoctor,
+            };
+            return (
+              <List
+                key={chat.id}
+                profile={{uri: chat.detailDoctor.photo}}
+                name={chat.detailDoctor.fullName}
+                desc={chat.lastContentChat}
+                onPress={() => navigation.navigate('Chatting', dataDoctor)}
+              />
+            );
+          })}
+        </ScrollView>
       </View>
     </View>
   );

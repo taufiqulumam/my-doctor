@@ -2,9 +2,8 @@ import React, {useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Button, Gap, Header, Input, Loading} from '../../components';
-import {colors, storeData, useForm} from '../../utils';
+import {colors, showError, storeData, useForm} from '../../utils';
 import {Fire} from '../../config';
-import {showMessage} from 'react-native-flash-message';
 
 const Register = ({navigation}) => {
   const [form, setForm] = useForm({
@@ -17,7 +16,7 @@ const Register = ({navigation}) => {
   const [loading, setLoading] = useState(false);
 
   const onContinue = () => {
-    console.log(form);
+    // console.log(form);
 
     setLoading(true);
     Fire.auth()
@@ -39,18 +38,12 @@ const Register = ({navigation}) => {
 
         storeData('user', data);
         navigation.navigate('UploadPhoto', data);
-        console.log('register success: ', success);
+        // console.log('register success: ', success);
       })
       .catch((error) => {
-        const errorMessage = error.message;
         setLoading(false);
-        showMessage({
-          message: errorMessage,
-          type: 'default',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
-        console.log('error: ', error);
+        showError(error.message);
+        // console.log('error: ', error);
       });
   };
   return (

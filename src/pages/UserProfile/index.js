@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {ILNullPhoto} from '../../assets';
-import {Gap, Header, List, Profile} from '../../components';
+import {Button, Gap, Header, List, Profile} from '../../components';
 import {colors, getData} from '../../utils';
+import {Fire} from '../../config';
+import {showMessage} from 'react-native-flash-message';
 
 const UserProfile = ({navigation}) => {
   const [profile, setProfile] = useState({
@@ -18,6 +20,23 @@ const UserProfile = ({navigation}) => {
       setProfile(data);
     });
   }, []);
+
+  const signOut = () => {
+    Fire.auth()
+      .signOut()
+      .then(() => {
+        console.log('success sign out');
+        navigation.replace('GetStarted');
+      })
+      .catch((err) => {
+        showMessage({
+          message: err.message,
+          type: 'default',
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      });
+  };
 
   return (
     <View style={styles.page}>
@@ -58,6 +77,9 @@ const UserProfile = ({navigation}) => {
         type="next"
         icon="help"
       />
+      <View style={styles.action}>
+        <Button title="Sign Out" onPress={signOut} />
+      </View>
     </View>
   );
 };
@@ -68,5 +90,9 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor: colors.white,
+  },
+  action: {
+    paddingHorizontal: 40,
+    paddingTop: 23,
   },
 });

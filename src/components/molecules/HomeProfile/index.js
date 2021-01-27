@@ -1,6 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {ILNullPhoto} from '../../../assets';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  YellowBox,
+} from 'react-native';
+import {IconNext, ILNullPhoto} from '../../../assets';
 import {colors, fonts, getData} from '../../../utils';
 
 const HomeProfile = ({onPress}) => {
@@ -21,20 +28,32 @@ const HomeProfile = ({onPress}) => {
   }, []);
 
   return (
-    <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={profile.photo} style={styles.avatar} />
-      <View>
-        <Text style={styles.name}>{profile.fullName}</Text>
-        <Text style={styles.profession}>{profile.profession}</Text>
-      </View>
-    </TouchableOpacity>
+    <View style={styles.page}>
+      <TouchableOpacity style={styles.container} onPress={onPress}>
+        <Image source={profile.photo} style={styles.avatar} />
+        <View style={styles.content}>
+          <Text style={styles.name}>{profile.fullName}</Text>
+          <Text style={styles.profession}>{profile.profession}</Text>
+        </View>
+        <IconNext />
+      </TouchableOpacity>
+    </View>
   );
 };
 
 export default HomeProfile;
 
 const styles = StyleSheet.create({
-  container: {flexDirection: 'row'},
+  page: {
+    backgroundColor: colors.cardLight,
+    borderRadius: 10,
+  },
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  content: {flex: 1},
   avatar: {width: 46, height: 46, borderRadius: 46 / 2, marginRight: 12},
   name: {
     fontSize: 16,

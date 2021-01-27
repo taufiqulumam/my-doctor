@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {IconRemovePhoto} from '../../../assets';
+import {IconAddPhoto, IconRemovePhoto} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
 const Profile = ({name, desc, isRemove, photo, onPress}) => {
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     marginTop: 2,
     textAlign: 'center',
+    textTransform: 'capitalize',
   },
   removePhoto: {position: 'absolute', right: 8, bottom: 8},
 });
